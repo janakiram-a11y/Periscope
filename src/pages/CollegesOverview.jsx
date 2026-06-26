@@ -1,6 +1,7 @@
 import React from 'react';
 import { GraduationCap, Users, BookOpen, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Fingerprint, FlaskConical, ShoppingCart, IndianRupee } from 'lucide-react';
 import { financialOverview, executiveKPIs, attendanceDetail, attentionItems } from '../data/dashboardData';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const NAVY = '#223F7F';
@@ -21,7 +22,7 @@ function SectionTitle({ children }) {
 
 function Card({ children, style }) {
   return (
-    <div style={{ background: 'white', borderRadius: 14, boxShadow: '0 1px 4px rgba(0,0,0,.07)', padding: '20px 22px', ...style }}>
+    <div style={{ background: 'white', borderRadius: 14, boxShadow: '0 1px 4px rgba(0,0,0,.07)', padding: '20px 22px', minWidth: 0, ...style }}>
       {children}
     </div>
   );
@@ -31,8 +32,8 @@ function MetricRow({ label, value, sub, valueColor }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 0', borderBottom: '1px solid #F3F4F6' }}>
       <span style={{ fontFamily: FONT, fontSize: 12.5, color: '#374151' }}>{label}</span>
-      <div style={{ textAlign: 'right' }}>
-        <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: valueColor || NAVY }}>{value}</div>
+      <div style={{ textAlign: 'right', minWidth: 0 }}>
+        <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: valueColor || NAVY, wordBreak: 'break-word' }}>{value}</div>
         {sub && <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>{sub}</div>}
       </div>
     </div>
@@ -60,16 +61,25 @@ const collegeAlerts = attentionItems.filter(a =>
 );
 
 export default function CollegesOverview({ onNavigate }) {
+  const { isMobile, isTablet } = useBreakpoint();
   const totalStudents = admissions.reduce((s, a) => s + a.enrolled, 0);
+
+  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
+  const contentPadding = isMobile ? '20px 16px' : '28px 32px';
+  const titleFontSize = isMobile ? 20 : 24;
+
+  const topGridCols = isMobile ? '1fr' : '1fr 1fr';
+  const bottomGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : '1fr 1fr 1fr';
+  const feeTopGridCols = isMobile ? '1fr 1fr' : '1fr 1fr 1fr';
 
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
       {/* Banner */}
-      <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #1E3A7A 60%, #2D5AA8 100%)`, padding: '28px 32px 24px' }}>
+      <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #1E3A7A 60%, #2D5AA8 100%)`, padding: bannerPadding }}>
         <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(147,197,253,.8)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
           Department Overview
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 4 }}>Colleges</div>
+        <div style={{ fontFamily: FONT, fontSize: titleFontSize, fontWeight: 800, color: 'white', marginBottom: 4 }}>Colleges</div>
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
           {[
             { label: 'Students', value: totalStudents.toLocaleString() },
@@ -77,23 +87,23 @@ export default function CollegesOverview({ onNavigate }) {
             { label: 'Departments', value: '84' },
             { label: 'Fee Demand', value: fmt(feeDemand.total) },
           ].map((kpi, i) => (
-            <div key={i}>
-              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: 'white' }}>{kpi.value}</div>
+            <div key={i} style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: 'white', wordBreak: 'break-word' }}>{kpi.value}</div>
               <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(191,219,254,.75)' }}>{kpi.label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ padding: '28px 32px', maxWidth: 1200 }}>
+      <div style={{ padding: contentPadding, maxWidth: 1200 }}>
 
         {/* Alerts */}
         {collegeAlerts.filter(a => a.severity === 'critical').length > 0 && (
-          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '12px 18px', marginBottom: 24, display: 'flex', gap: 10 }}>
+          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '12px 18px', marginBottom: 24, display: 'flex', gap: 10, overflow: 'hidden' }}>
             <AlertTriangle size={16} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />
-            <div>
+            <div style={{ minWidth: 0, flex: 1 }}>
               {collegeAlerts.filter(a => a.severity === 'critical').map(a => (
-                <div key={a.id} style={{ fontFamily: FONT, fontSize: 12, color: '#991B1B', lineHeight: 1.6 }}>
+                <div key={a.id} style={{ fontFamily: FONT, fontSize: 12, color: '#991B1B', lineHeight: 1.6, wordBreak: 'break-word' }}>
                   <strong>{a.title}</strong> — {a.description}
                 </div>
               ))}
@@ -101,19 +111,19 @@ export default function CollegesOverview({ onNavigate }) {
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: topGridCols, gap: 20, marginBottom: 24 }}>
 
           {/* Fee Collection */}
           <Card>
             <SectionTitle>Fee Collection</SectionTitle>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: feeTopGridCols, gap: 12, marginBottom: 16 }}>
               {[
                 { label: 'Demand',    value: fmt(feeDemand.total),     color: NAVY },
                 { label: 'Collected', value: fmt(feeDemand.collected),  color: '#059669' },
                 { label: 'Pending',   value: fmt(feeDemand.pending),    color: '#DC2626' },
               ].map((m, i) => (
-                <div key={i} style={{ textAlign: 'center', padding: '10px 0', background: '#F9FAFB', borderRadius: 10 }}>
-                  <div style={{ fontFamily: FONT, fontSize: 17, fontWeight: 800, color: m.color }}>{m.value}</div>
+                <div key={i} style={{ textAlign: 'center', padding: '10px 0', background: '#F9FAFB', borderRadius: 10, minWidth: 0 }}>
+                  <div style={{ fontFamily: FONT, fontSize: 17, fontWeight: 800, color: m.color, wordBreak: 'break-word' }}>{m.value}</div>
                   <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#6B7280', marginTop: 2 }}>{m.label}</div>
                 </div>
               ))}
@@ -162,13 +172,13 @@ export default function CollegesOverview({ onNavigate }) {
           </Card>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: bottomGridCols, gap: 20 }}>
 
           {/* Attendance */}
           <Card>
             <SectionTitle>Staff Attendance — Today</SectionTitle>
             <div style={{ textAlign: 'center', marginBottom: 12 }}>
-              <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: '#D97706' }}>58.3%</div>
+              <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: '#D97706', wordBreak: 'break-word' }}>58.3%</div>
               <div style={{ fontFamily: FONT, fontSize: 12, color: '#9CA3AF' }}>Attendance Rate</div>
             </div>
             <MetricRow label="Total Staff"  value="1,373" />
@@ -180,7 +190,7 @@ export default function CollegesOverview({ onNavigate }) {
             <div style={{ marginTop: 12 }}>
               <div style={{ fontFamily: FONT, fontSize: 11.5, fontWeight: 600, color: '#374151', marginBottom: 8 }}>Top Absent Departments</div>
               {attendanceDetail.employee.topAbsentDepts.slice(0, 3).map((d, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 4, padding: '4px 0' }}>
                   <span style={{ fontFamily: FONT, fontSize: 11, color: '#6B7280' }}>{d.dept}</span>
                   <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: '#DC2626' }}>{d.rate}% absent</span>
                 </div>
@@ -192,7 +202,7 @@ export default function CollegesOverview({ onNavigate }) {
           <Card>
             <SectionTitle>Research Portal</SectionTitle>
             <div style={{ textAlign: 'center', marginBottom: 14 }}>
-              <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: NAVY }}>39</div>
+              <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: NAVY, wordBreak: 'break-word' }}>39</div>
               <div style={{ fontFamily: FONT, fontSize: 12, color: '#9CA3AF' }}>Total Proposals</div>
             </div>
             {[
@@ -204,7 +214,7 @@ export default function CollegesOverview({ onNavigate }) {
             ))}
             <div style={{ marginTop: 12, background: '#EFF6FF', borderRadius: 10, padding: '10px 14px' }}>
               <div style={{ fontFamily: FONT, fontSize: 11, color: '#6B7280', marginBottom: 2 }}>Estimated Funding</div>
-              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: NAVY }}>₹1.875 Cr</div>
+              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: NAVY, wordBreak: 'break-word' }}>₹1.875 Cr</div>
               <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>Across approved proposals</div>
             </div>
           </Card>
@@ -213,7 +223,7 @@ export default function CollegesOverview({ onNavigate }) {
           <Card>
             <SectionTitle>Indent Portal</SectionTitle>
             <div style={{ textAlign: 'center', marginBottom: 14 }}>
-              <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: NAVY }}>₹4.275 Cr</div>
+              <div style={{ fontFamily: FONT, fontSize: 32, fontWeight: 800, color: NAVY, wordBreak: 'break-word' }}>₹4.275 Cr</div>
               <div style={{ fontFamily: FONT, fontSize: 12, color: '#9CA3AF' }}>Total Budget Allocated</div>
             </div>
             {[
@@ -226,7 +236,7 @@ export default function CollegesOverview({ onNavigate }) {
             <div style={{ marginTop: 12, background: '#FFFBEB', borderRadius: 10, padding: '10px 14px' }}>
               <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                 <AlertTriangle size={14} color="#D97706" style={{ flexShrink: 0, marginTop: 1 }} />
-                <div style={{ fontFamily: FONT, fontSize: 11, color: '#92400E' }}>
+                <div style={{ fontFamily: FONT, fontSize: 11, color: '#92400E', wordBreak: 'break-word' }}>
                   7 purchase indents awaiting multi-level approval — ₹14.08 L at risk of delay
                 </div>
               </div>

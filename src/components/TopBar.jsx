@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bell, ChevronRight, Menu } from 'lucide-react';
-import useBreakpoint from '../hooks/useBreakpoint';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 

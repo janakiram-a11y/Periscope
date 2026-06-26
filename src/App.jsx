@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
-import Landing from './pages/Landing';
 import ResearchOverview from './pages/ResearchOverview';
 import IndentOverview from './pages/IndentOverview';
 import PeriscopeDashboard from './pages/PeriscopeDashboard';
-import useBreakpoint from './hooks/useBreakpoint';
+import { useBreakpoint } from './hooks/useBreakpoint';
 import './responsive.css';
 
 // Management
@@ -51,13 +50,12 @@ export default function App() {
       <Sidebar
         activeModule={activeModule}
         onNavigate={setActiveModule}
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         <TopBar activeModule={activeModule} onMenuToggle={() => setSidebarOpen(prev => !prev)} />
         <main style={{ flex: 1, overflow: 'auto' }}>
-          {activeModule === null                   && <Landing onSelect={setActiveModule} />}
           {activeModule === 'dashboard'            && <PeriscopeDashboard onNavigate={setActiveModule} />}
           {activeModule === 'org-summary'          && <OrgSummary onNavigate={setActiveModule} />}
           {activeModule === 'management-alerts'    && <ManagementAlerts onNavigate={setActiveModule} />}

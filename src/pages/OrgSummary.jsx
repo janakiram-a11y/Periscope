@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertTriangle, TrendingUp, TrendingDown, CheckCircle, Building2, Stethoscope, Utensils, ChevronRight, Users, IndianRupee, AlertCircle } from 'lucide-react';
 import { financialOverview, executiveKPIs, attentionItems, foodKitchenData } from '../data/dashboardData';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const NAVY = '#223F7F';
@@ -31,12 +32,12 @@ function KpiCard({ icon: Icon, iconBg, label, value, sub, rag }) {
   return (
     <div style={{ background: 'white', borderRadius: 14, padding: '20px 22px', boxShadow: '0 1px 4px rgba(0,0,0,.07)', display: 'flex', flexDirection: 'column', gap: 8, flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ width: 40, height: 40, borderRadius: 10, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 40, height: 40, borderRadius: 10, background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Icon size={20} color="white" strokeWidth={2} />
         </div>
         {rag && <RagBadge status={rag} />}
       </div>
-      <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 800, color: '#111827', lineHeight: 1.1, marginTop: 4 }}>{value}</div>
+      <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 800, color: '#111827', lineHeight: 1.1, marginTop: 4, wordBreak: 'break-word', minWidth: 0 }}>{value}</div>
       <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600, color: '#6B7280' }}>{label}</div>
       {sub && <div style={{ fontFamily: FONT, fontSize: 11, color: '#9CA3AF' }}>{sub}</div>}
     </div>
@@ -53,7 +54,7 @@ function DeptCard({ icon: Icon, color, dept, onClick, financials, counts, alerts
     >
       <div style={{ background: color, padding: '18px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(255,255,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(255,255,255,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             <Icon size={20} color="white" strokeWidth={2} />
           </div>
           <div>
@@ -67,13 +68,15 @@ function DeptCard({ icon: Icon, color, dept, onClick, financials, counts, alerts
         {/* Financials */}
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: '#9CA3AF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Financial</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-            {financials.map((f, i) => (
-              <div key={i} style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 800, color: NAVY }}>{f.value}</div>
-                <div style={{ fontFamily: FONT, fontSize: 10, color: '#6B7280', marginTop: 2 }}>{f.label}</div>
-              </div>
-            ))}
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, minWidth: 220 }}>
+              {financials.map((f, i) => (
+                <div key={i} style={{ textAlign: 'center' }}>
+                  <div style={{ fontFamily: FONT, fontSize: 15, fontWeight: 800, color: NAVY, wordBreak: 'break-word' }}>{f.value}</div>
+                  <div style={{ fontFamily: FONT, fontSize: 10, color: '#6B7280', marginTop: 2 }}>{f.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         {/* Divider */}
@@ -91,7 +94,7 @@ function DeptCard({ icon: Icon, color, dept, onClick, financials, counts, alerts
         {alerts.length > 0 && (
           <div style={{ background: '#FEF2F2', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             <AlertTriangle size={14} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
-            <div>
+            <div style={{ minWidth: 0, wordBreak: 'break-word' }}>
               {alerts.slice(0, 2).map((a, i) => (
                 <div key={i} style={{ fontFamily: FONT, fontSize: 11, color: '#991B1B', lineHeight: 1.4 }}>{a}</div>
               ))}
@@ -105,6 +108,8 @@ function DeptCard({ icon: Icon, color, dept, onClick, financials, counts, alerts
 }
 
 export default function OrgSummary({ onNavigate }) {
+  const { isMobile, isTablet } = useBreakpoint();
+
   const criticalAlerts = attentionItems.filter(a => a.severity === 'critical');
   const highAlerts     = attentionItems.filter(a => a.severity === 'high');
 
@@ -129,24 +134,30 @@ export default function OrgSummary({ onNavigate }) {
     { label: 'A1 Payable',   value: fmt(foodKitchenData.vendorPayables.outstanding) },
   ];
 
+  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
+  const bannerTitleSize = isMobile ? 20 : 24;
+  const contentPadding = isMobile ? '20px 16px' : '28px 32px';
+  const kpiGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(5, 1fr)';
+  const deptGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(auto-fit, minmax(280px, 1fr))';
+
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
       {/* Banner */}
-      <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #1E3A7A 50%, #2D5AA8 100%)`, padding: '28px 32px 24px' }}>
+      <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #1E3A7A 50%, #2D5AA8 100%)`, padding: bannerPadding }}>
         <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(147,197,253,.8)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
           Laila Management · Periscope
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 4 }}>
+        <div style={{ fontFamily: FONT, fontSize: bannerTitleSize, fontWeight: 800, color: 'white', marginBottom: 4, wordBreak: 'break-word' }}>
           Organisation Summary
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 13, color: 'rgba(191,219,254,.75)' }}>
+        <div style={{ fontFamily: FONT, fontSize: 13, color: 'rgba(191,219,254,.75)', flexWrap: 'wrap' }}>
           Asram Colleges · Academic Year 2026–27 · As of 26 Jun 2026
         </div>
       </div>
 
-      <div style={{ padding: '28px 32px', maxWidth: 1200 }}>
+      <div style={{ padding: contentPadding, maxWidth: 1200 }}>
         {/* Top financial KPIs */}
-        <div style={{ display: 'flex', gap: 16, marginBottom: 28, flexWrap: 'wrap' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: kpiGridCols, gap: 16, marginBottom: 28 }}>
           <KpiCard icon={IndianRupee} iconBg="#223F7F" label="Total Fee Demand" value={fmt(totalDemand)} sub="College + Hostel fees" rag="amber" />
           <KpiCard icon={TrendingUp}  iconBg="#059669" label="Total Collected"  value={fmt(totalCollected)} sub={`${Math.round(totalCollected/totalDemand*100)}% collection rate`} rag="amber" />
           <KpiCard icon={TrendingDown} iconBg="#DC2626" label="Total Pending"    value={fmt(totalPending)} sub="Across all fee streams" rag="red" />
@@ -156,9 +167,9 @@ export default function OrgSummary({ onNavigate }) {
 
         {/* Alert strip */}
         {criticalAlerts.length > 0 && (
-          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '14px 20px', marginBottom: 28, display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
             <AlertTriangle size={18} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0, wordBreak: 'break-word' }}>
               <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#991B1B', marginBottom: 4 }}>
                 {criticalAlerts.length} Critical Issues Require Immediate Attention
               </div>
@@ -170,7 +181,7 @@ export default function OrgSummary({ onNavigate }) {
             </div>
             <button
               onClick={() => onNavigate('management-alerts')}
-              style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#DC2626', background: 'none', border: '1px solid #FECACA', borderRadius: 8, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap' }}
+              style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#DC2626', background: 'none', border: '1px solid #FECACA', borderRadius: 8, padding: '6px 14px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
             >
               View All Alerts
             </button>
@@ -181,7 +192,7 @@ export default function OrgSummary({ onNavigate }) {
         <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Departments
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: deptGridCols, gap: 20 }}>
           <DeptCard
             icon={Building2} color="#223F7F" dept="Colleges" rag="amber"
             onClick={() => onNavigate('colleges-overview')}

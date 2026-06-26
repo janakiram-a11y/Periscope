@@ -1,6 +1,7 @@
 import React from 'react';
 import { Utensils, Package, AlertTriangle, ChefHat, Users, Building2, Activity, CheckCircle, Clock } from 'lucide-react';
 import { foodKitchenData, attentionItems } from '../data/dashboardData';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const AMBER = '#B45309';
@@ -32,7 +33,7 @@ function MetricRow({ label, value, sub, valueColor, last }) {
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 0', borderBottom: last ? 'none' : '1px solid #F3F4F6' }}>
       <span style={{ fontFamily: FONT, fontSize: 12.5, color: '#374151' }}>{label}</span>
       <div style={{ textAlign: 'right' }}>
-        <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: valueColor || '#111827' }}>{value}</div>
+        <div style={{ fontFamily: FONT, fontSize: 13, fontWeight: 700, color: valueColor || '#111827', wordBreak: 'break-word' }}>{value}</div>
         {sub && <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>{sub}</div>}
       </div>
     </div>
@@ -53,19 +54,28 @@ const statusLabel = { received: 'Received', 'in-transit': 'In Transit', pending:
 const foodAlerts = attentionItems.filter(a => a.deptId === 'a1-finance');
 
 export default function FoodKitchenOverview() {
+  const { isMobile, isTablet } = useBreakpoint();
   const d = foodKitchenData;
   const mess = d.messBilling;
   const vendor = d.vendorPayables;
   const indents = d.ingredientIndents;
 
+  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
+  const bannerTitleSize = isMobile ? 20 : 24;
+  const contentPadding = isMobile ? '20px 16px' : '28px 32px';
+
+  const kpiCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(4, 1fr)';
+  const twoCols = isMobile ? '1fr' : '1fr 1fr';
+  const threeCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : '1fr 1fr 1fr';
+
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
       {/* Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #92400E 0%, #B45309 50%, #D97706 100%)', padding: '28px 32px 24px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #92400E 0%, #B45309 50%, #D97706 100%)', padding: bannerPadding }}>
         <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(253,230,138,.85)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
           Department Overview
         </div>
-        <div style={{ fontFamily: FONT, fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 8 }}>Food & Kitchen</div>
+        <div style={{ fontFamily: FONT, fontSize: bannerTitleSize, fontWeight: 800, color: 'white', marginBottom: 8 }}>Food & Kitchen</div>
         <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
           {[
             { label: 'Dining Facilities', value: `${d.summary.totalDiners}` },
@@ -75,28 +85,28 @@ export default function FoodKitchenOverview() {
             { label: 'Hospital Wards',    value: `${d.patientDiet.totalWards}` },
           ].map((k, i) => (
             <div key={i}>
-              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: 'white' }}>{k.value}</div>
+              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: 'white', wordBreak: 'break-word' }}>{k.value}</div>
               <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(253,230,138,.75)' }}>{k.label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ padding: '28px 32px', maxWidth: 1200 }}>
+      <div style={{ padding: contentPadding, maxWidth: 1200 }}>
 
         {/* System ramp-up notice */}
-        <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 12, padding: '12px 18px', marginBottom: 20, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+        <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: 12, padding: '12px 18px', marginBottom: 20, display: 'flex', gap: 10, alignItems: 'flex-start', overflow: 'hidden' }}>
           <Activity size={16} color="#2563EB" style={{ flexShrink: 0, marginTop: 1 }} />
-          <div style={{ fontFamily: FONT, fontSize: 12, color: '#1D4ED8' }}>
+          <div style={{ fontFamily: FONT, fontSize: 12, color: '#1D4ED8', wordBreak: 'break-word' }}>
             <strong>System Status:</strong> Campus Kitchen (kitchen.orfus.in) went live May 2026. Core mess operations and patient diet active. Subscription and À la Carte modules in ramp-up.
           </div>
         </div>
 
         {/* Alerts */}
         {foodAlerts.length > 0 && (
-          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '12px 18px', marginBottom: 24, display: 'flex', gap: 10 }}>
+          <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 12, padding: '12px 18px', marginBottom: 24, display: 'flex', gap: 10, overflow: 'hidden' }}>
             <AlertTriangle size={16} color="#DC2626" style={{ flexShrink: 0, marginTop: 2 }} />
-            <div>
+            <div style={{ wordBreak: 'break-word' }}>
               {foodAlerts.map(a => (
                 <div key={a.id} style={{ fontFamily: FONT, fontSize: 12, color: '#991B1B', lineHeight: 1.6 }}>
                   <strong>{a.title}</strong> — {a.description}
@@ -107,22 +117,22 @@ export default function FoodKitchenOverview() {
         )}
 
         {/* Top KPI row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: kpiCols, gap: 14, marginBottom: 24 }}>
           {[
             { label: 'Mess Billed',     value: fmt(mess.totalBilled),   color: AMBER,     sub: `${d.summary.totalSeats} seat capacity` },
             { label: 'Mess Collected',  value: fmt(mess.collected),      color: '#059669', sub: `${mess.collectionRate}% collection` },
             { label: 'Mess Pending',    value: fmt(mess.pending),        color: '#DC2626', sub: 'Outstanding hostel mess dues' },
             { label: 'Vendor Payable',  value: fmt(vendor.outstanding),  color: '#DC2626', sub: `${vendor.overdueInvoices} overdue invoices` },
           ].map((k, i) => (
-            <div key={i} style={{ background: 'white', borderRadius: 12, padding: '16px 18px', boxShadow: '0 1px 4px rgba(0,0,0,.07)' }}>
-              <div style={{ fontFamily: FONT, fontSize: 22, fontWeight: 800, color: k.color }}>{k.value}</div>
+            <div key={i} style={{ background: 'white', borderRadius: 12, padding: '16px 18px', boxShadow: '0 1px 4px rgba(0,0,0,.07)', minWidth: 0 }}>
+              <div style={{ fontFamily: FONT, fontSize: 22, fontWeight: 800, color: k.color, wordBreak: 'break-word' }}>{k.value}</div>
               <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 600, color: '#374151', margin: '4px 0 2px' }}>{k.label}</div>
               <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>{k.sub}</div>
             </div>
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: twoCols, gap: 20, marginBottom: 20 }}>
 
           {/* Mess Billing by Block */}
           <Card>
@@ -161,26 +171,28 @@ export default function FoodKitchenOverview() {
                 { label: 'Total Channels', value: `${vendor.channels}`, color: AMBER },
                 { label: 'Settled This Month', value: fmt(vendor.settledThisMonth), color: '#059669' },
               ].map((m, i) => (
-                <div key={i} style={{ background: '#F9FAFB', borderRadius: 10, padding: '10px 12px' }}>
-                  <div style={{ fontFamily: FONT, fontSize: 18, fontWeight: 800, color: m.color }}>{m.value}</div>
+                <div key={i} style={{ background: '#F9FAFB', borderRadius: 10, padding: '10px 12px', minWidth: 0 }}>
+                  <div style={{ fontFamily: FONT, fontSize: 18, fontWeight: 800, color: m.color, wordBreak: 'break-word' }}>{m.value}</div>
                   <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#6B7280', marginTop: 2 }}>{m.label}</div>
                 </div>
               ))}
             </div>
             <div style={{ fontFamily: FONT, fontSize: 11.5, fontWeight: 600, color: '#374151', marginBottom: 8 }}>Overdue Channels</div>
-            {vendor.overdueChannels.map((c, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: i < vendor.overdueChannels.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
-                <span style={{ fontFamily: FONT, fontSize: 12, color: '#374151' }}>{c.channel}</span>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#DC2626' }}>{fmt(c.outstanding)}</div>
-                  <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>{c.daysOverdue}d overdue</div>
+            <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              {vendor.overdueChannels.map((c, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: i < vendor.overdueChannels.length - 1 ? '1px solid #F3F4F6' : 'none' }}>
+                  <span style={{ fontFamily: FONT, fontSize: 12, color: '#374151' }}>{c.channel}</span>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontFamily: FONT, fontSize: 12, fontWeight: 700, color: '#DC2626', wordBreak: 'break-word' }}>{fmt(c.outstanding)}</div>
+                    <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>{c.daysOverdue}d overdue</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </Card>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: threeCols, gap: 20 }}>
 
           {/* Dining Facilities */}
           <Card>
@@ -221,7 +233,7 @@ export default function FoodKitchenOverview() {
             ))}
             <div style={{ marginTop: 14, borderTop: '1px solid #F3F4F6', paddingTop: 12 }}>
               <div style={{ fontFamily: FONT, fontSize: 11, color: '#6B7280', marginBottom: 4 }}>Estimated Procurement Value</div>
-              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: AMBER }}>{fmt(indents.estimatedTotalValue)}</div>
+              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: AMBER, wordBreak: 'break-word' }}>{fmt(indents.estimatedTotalValue)}</div>
               <div style={{ fontFamily: FONT, fontSize: 10.5, color: '#9CA3AF' }}>Extrapolated from 112 indents</div>
             </div>
           </Card>
