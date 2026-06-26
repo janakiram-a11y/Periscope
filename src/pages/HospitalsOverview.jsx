@@ -62,7 +62,7 @@ export default function HospitalsOverview({ onNavigate }) {
   const twoColGridCols = isMobile ? '1fr' : '1fr 1fr';
 
   const bannerStats = (
-    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap' }}>
       {[
         { label: 'Hospitals',        value: '3' },
         { label: 'Combined Budget',  value: fmt(totalBudget) },

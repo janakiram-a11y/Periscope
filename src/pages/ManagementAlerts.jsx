@@ -132,7 +132,7 @@ export default function ManagementAlerts({ onNavigate }) {
   const contentPadding = isMobile ? '20px 16px' : '28px 32px';
 
   const bannerStats = (
-    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap' }}>
       {[
         { label: 'Critical',     value: counts.critical,    color: '#FCA5A5' },
         { label: 'High',         value: counts.high,        color: '#FCD34D' },

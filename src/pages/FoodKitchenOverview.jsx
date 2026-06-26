@@ -68,7 +68,7 @@ export default function FoodKitchenOverview() {
   const threeCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : '1fr 1fr 1fr';
 
   const bannerStats = (
-    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap' }}>
       {[
         { label: 'Dining Facilities',  value: `${d.summary.totalDiners}` },
         { label: 'Total Seats',        value: `${d.summary.totalSeats.toLocaleString()}` },

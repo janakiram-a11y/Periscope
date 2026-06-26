@@ -28,7 +28,7 @@ export default function PageBanner({ crumb, title, subtitle, actions, stat, back
 
       <div style={{
         display: 'flex',
-        alignItems: isMobile ? 'flex-start' : 'flex-end',
+        alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
         gap: isMobile ? 12 : 0,

@@ -72,7 +72,7 @@ export default function CollegesOverview({ onNavigate }) {
   const feeTopGridCols = isMobile ? '1fr 1fr' : '1fr 1fr 1fr';
 
   const bannerStats = (
-    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap' }}>
       {[
         { label: 'Students',    value: totalStudents.toLocaleString() },
         { label: 'Staff',       value: '1,373' },
