@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary:     #223F7F;
+  --primary-900: #1A3366;
+  --primary-700: #1E3A7A;
+  --blue-600:    #1A5FA8;
+  --blue-500:    #3B82F6;
+  --blue-200:    #BFDBFE;
+  --blue-100:    #93C5FD;
+  --indigo-50:   #EEF2FF;
+  --blue-50:     #EFF6FF;
+
+  --success:     #059669;
+  --warning:     #F97316;
+  --danger:      #EF4444;
+  --violet:      #7C3AED;
+
+  --gray-900: #111827;
+  --gray-800: #1F2937;
+  --gray-700: #374151;
+  --gray-600: #4B5563;
+  --gray-500: #6B7280;
+  --gray-400: #9CA3AF;
+  --gray-300: #D1D5DB;
+  --gray-200: #E5E7EB;
+  --gray-100: #F3F4F6;
+  --white:    #FFFFFF;
+
+  --sidebar-bg: linear-gradient(#1A3366 0%, #223F7F 40%, #1E3A7A 100%);
+  --banner-bg:  linear-gradient(135deg, #223F7F 0%, #1A5FA8 100%);
+  --body-bg:    linear-gradient(to right bottom, #EEF2FF, #ffffff, #EFF6FF);
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1);
+
+  --radius-sm:  6px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-full: 9999px;
+
+  --font: 'Montserrat', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--body-bg);
+  background-attachment: fixed;
+  color: var(--gray-800);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root { height: 100vh; display: flex; flex-direction: column; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #818cf8; }
