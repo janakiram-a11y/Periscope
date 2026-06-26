@@ -5,6 +5,8 @@ import Landing from './pages/Landing';
 import ResearchOverview from './pages/ResearchOverview';
 import IndentOverview from './pages/IndentOverview';
 import PeriscopeDashboard from './pages/PeriscopeDashboard';
+import useBreakpoint from './hooks/useBreakpoint';
+import './responsive.css';
 
 // Management
 import OrgSummary        from './pages/OrgSummary';
@@ -34,13 +36,26 @@ import Hostels             from './pages/Hostels';
 import TravelDesk          from './pages/TravelDesk';
 
 export default function App() {
-  const [activeModule, setActiveModule] = useState(null);
+  const [activeModule, setActiveModule] = useState('org-summary');
+  const { isMobile } = useBreakpoint();
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <Sidebar activeModule={activeModule} onNavigate={setActiveModule} />
+      {isMobile && sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <Sidebar
+        activeModule={activeModule}
+        onNavigate={setActiveModule}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
-        <TopBar activeModule={activeModule} />
+        <TopBar activeModule={activeModule} onMenuToggle={() => setSidebarOpen(prev => !prev)} />
         <main style={{ flex: 1, overflow: 'auto' }}>
           {activeModule === null                   && <Landing onSelect={setActiveModule} />}
           {activeModule === 'dashboard'            && <PeriscopeDashboard onNavigate={setActiveModule} />}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Bell, ChevronRight } from 'lucide-react';
+import { Bell, ChevronRight, Menu } from 'lucide-react';
+import useBreakpoint from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 
@@ -20,6 +21,11 @@ const PAGE_LABELS = {
   'travel-desk':         'Travel Desk',
   research:              'Research Portal',
   indent:                'Indent Portal',
+  'org-summary':         'Organisation Summary',
+  'management-alerts':   'Alerts Centre',
+  'colleges-overview':   'Colleges Overview',
+  'hospitals-overview':  'Hospitals Overview',
+  'food-kitchen':        'Food & Kitchen',
 };
 
 const GROUP_LABELS = {
@@ -39,11 +45,17 @@ const GROUP_LABELS = {
   'travel-desk':         'Operations',
   research:              'Portals',
   indent:                'Portals',
+  'org-summary':         'Management',
+  'management-alerts':   'Management',
+  'colleges-overview':   'Colleges',
+  'hospitals-overview':  'Hospitals',
+  'food-kitchen':        'Food & Kitchen',
 };
 
-export default function TopBar({ activeModule }) {
+export default function TopBar({ activeModule, onMenuToggle }) {
   const pageLabel  = PAGE_LABELS[activeModule] ?? 'Overview';
   const groupLabel = GROUP_LABELS[activeModule];
+  const { isMobile } = useBreakpoint();
 
   return (
     <header style={{
@@ -56,17 +68,43 @@ export default function TopBar({ activeModule }) {
       flexShrink: 0,
       zIndex: 20,
     }}>
-      {/* Breadcrumb */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-        <span style={{ fontFamily: FONT, fontSize: 11.5, color: '#9CA3AF', fontWeight: 500 }}>Periscope</span>
-        {groupLabel && (
-          <>
-            <ChevronRight size={11} color="#D1D5DB" />
-            <span style={{ fontFamily: FONT, fontSize: 11.5, color: '#9CA3AF', fontWeight: 500 }}>{groupLabel}</span>
-          </>
+      {/* Left side: hamburger (mobile only) + breadcrumb */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 10 : 5 }}>
+        {isMobile && (
+          <button
+            onClick={onMenuToggle}
+            aria-label="Toggle menu"
+            style={{
+              width: 34, height: 34, borderRadius: 8,
+              border: '1px solid #E5E7EB', background: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Menu size={17} color="#6B7280" />
+          </button>
         )}
-        <ChevronRight size={11} color="#D1D5DB" />
-        <span style={{ fontFamily: FONT, fontSize: 12.5, color: '#223F7F', fontWeight: 700 }}>{pageLabel}</span>
+
+        {/* Breadcrumb */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          {isMobile ? (
+            <span style={{ fontFamily: FONT, fontSize: 12.5, color: '#223F7F', fontWeight: 700 }}>
+              {pageLabel}
+            </span>
+          ) : (
+            <>
+              <span style={{ fontFamily: FONT, fontSize: 11.5, color: '#9CA3AF', fontWeight: 500 }}>Periscope</span>
+              {groupLabel && (
+                <>
+                  <ChevronRight size={11} color="#D1D5DB" />
+                  <span style={{ fontFamily: FONT, fontSize: 11.5, color: '#9CA3AF', fontWeight: 500 }}>{groupLabel}</span>
+                </>
+              )}
+              <ChevronRight size={11} color="#D1D5DB" />
+              <span style={{ fontFamily: FONT, fontSize: 12.5, color: '#223F7F', fontWeight: 700 }}>{pageLabel}</span>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Right actions */}

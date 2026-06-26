@@ -1,0 +1,38 @@
+/* === RESPONSIVE GRID UTILITIES === */
+.rg-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.rg-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.rg-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.rg-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+/* Table scrolling */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Flex row that wraps */
+.flex-wrap-row { display: flex; flex-wrap: wrap; gap: 16px; }
+
+/* Mobile sidebar overlay */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 25; }
+
+/* Chart container */
+.chart-container { width: 100%; min-width: 0; overflow: hidden; }
+
+/* Stat row that wraps on mobile */
+.stat-row { display: flex; flex-wrap: wrap; gap: 14px; }
+.stat-row > * { flex: 1 1 160px; min-width: 0; }
+
+@media (max-width: 1024px) {
+  .rg-4 { grid-template-columns: repeat(2, 1fr); }
+  .rg-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .rg-2, .rg-3, .rg-4 { grid-template-columns: 1fr; }
+  .rg-auto { grid-template-columns: 1fr; }
+  .sidebar-overlay { display: block; }
+  .hide-mobile { display: none !important; }
+  .mobile-full { width: 100% !important; }
+}
+
+@media (max-width: 640px) {
+  .stat-row > * { flex: 1 1 140px; }
+}
