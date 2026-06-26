@@ -2,6 +2,7 @@ import React from 'react';
 import { GraduationCap, Users, BookOpen, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Fingerprint, FlaskConical, ShoppingCart, IndianRupee } from 'lucide-react';
 import { financialOverview, executiveKPIs, attendanceDetail, attentionItems } from '../data/dashboardData';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import PageBanner from '../components/PageBanner';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const NAVY = '#223F7F';
@@ -64,35 +65,42 @@ export default function CollegesOverview({ onNavigate }) {
   const { isMobile, isTablet } = useBreakpoint();
   const totalStudents = admissions.reduce((s, a) => s + a.enrolled, 0);
 
-  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
   const contentPadding = isMobile ? '20px 16px' : '28px 32px';
-  const titleFontSize = isMobile ? 20 : 24;
 
   const topGridCols = isMobile ? '1fr' : '1fr 1fr';
   const bottomGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : '1fr 1fr 1fr';
   const feeTopGridCols = isMobile ? '1fr 1fr' : '1fr 1fr 1fr';
 
+  const bannerStats = (
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+      {[
+        { label: 'Students',    value: totalStudents.toLocaleString() },
+        { label: 'Staff',       value: '1,373' },
+        { label: 'Departments', value: '84' },
+        { label: 'Fee Demand',  value: fmt(feeDemand.total) },
+      ].map((kpi, i) => (
+        <div key={i} style={{
+          background: 'rgba(255,255,255,0.12)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          borderRadius: 10,
+          padding: isMobile ? '8px 12px' : '10px 16px',
+          minWidth: 0,
+        }}>
+          <div style={{ fontFamily: FONT, fontSize: isMobile ? 16 : 20, fontWeight: 800, color: 'white', wordBreak: 'break-word', lineHeight: 1.1 }}>{kpi.value}</div>
+          <div style={{ fontFamily: FONT, fontSize: 10.5, color: 'rgba(255,255,255,.65)', marginTop: 3 }}>{kpi.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
-      {/* Banner */}
-      <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #1E3A7A 60%, #2D5AA8 100%)`, padding: bannerPadding }}>
-        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(147,197,253,.8)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
-          Department Overview
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: titleFontSize, fontWeight: 800, color: 'white', marginBottom: 4 }}>Colleges</div>
-        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-          {[
-            { label: 'Students', value: totalStudents.toLocaleString() },
-            { label: 'Staff',    value: '1,373' },
-            { label: 'Departments', value: '84' },
-            { label: 'Fee Demand', value: fmt(feeDemand.total) },
-          ].map((kpi, i) => (
-            <div key={i} style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: 'white', wordBreak: 'break-word' }}>{kpi.value}</div>
-              <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(191,219,254,.75)' }}>{kpi.label}</div>
-            </div>
-          ))}
-        </div>
+      <div style={{ padding: isMobile ? '20px 16px' : '28px 32px 0' }}>
+        <PageBanner
+          crumb="DEPARTMENT OVERVIEW"
+          title="Colleges"
+          actions={bannerStats}
+        />
       </div>
 
       <div style={{ padding: contentPadding, maxWidth: 1200 }}>

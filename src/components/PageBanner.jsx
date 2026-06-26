@@ -3,12 +3,12 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 
-export default function PageBanner({ crumb, title, subtitle, actions, stat }) {
+export default function PageBanner({ crumb, title, subtitle, actions, stat, background }) {
   const { isMobile } = useBreakpoint();
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, #223F7F 0%, #1A5FA8 100%)',
+      background: background || 'linear-gradient(135deg, #223F7F 0%, #1A5FA8 100%)',
       borderRadius: 16,
       padding: isMobile ? '24px 20px' : '28px 32px',
       color: 'white',

@@ -2,6 +2,7 @@ import React from 'react';
 import { Utensils, Package, AlertTriangle, ChefHat, Users, Building2, Activity, CheckCircle, Clock } from 'lucide-react';
 import { foodKitchenData, attentionItems } from '../data/dashboardData';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import PageBanner from '../components/PageBanner';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const AMBER = '#B45309';
@@ -60,36 +61,42 @@ export default function FoodKitchenOverview() {
   const vendor = d.vendorPayables;
   const indents = d.ingredientIndents;
 
-  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
-  const bannerTitleSize = isMobile ? 20 : 24;
   const contentPadding = isMobile ? '20px 16px' : '28px 32px';
 
   const kpiCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(4, 1fr)';
   const twoCols = isMobile ? '1fr' : '1fr 1fr';
   const threeCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : '1fr 1fr 1fr';
 
+  const bannerStats = (
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+      {[
+        { label: 'Dining Facilities',  value: `${d.summary.totalDiners}` },
+        { label: 'Total Seats',        value: `${d.summary.totalSeats.toLocaleString()}` },
+        { label: 'Mess Billing',       value: fmt(mess.totalBilled) },
+        { label: 'Ingredient Indents', value: `${d.summary.totalIngredientIndents}` },
+        { label: 'Hospital Wards',     value: `${d.patientDiet.totalWards}` },
+      ].map((k, i) => (
+        <div key={i} style={{
+          background: 'rgba(255,255,255,0.12)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          borderRadius: 10,
+          padding: isMobile ? '8px 12px' : '10px 16px',
+        }}>
+          <div style={{ fontFamily: FONT, fontSize: isMobile ? 16 : 20, fontWeight: 800, color: 'white', wordBreak: 'break-word', lineHeight: 1.1 }}>{k.value}</div>
+          <div style={{ fontFamily: FONT, fontSize: 10.5, color: 'rgba(255,255,255,.65)', marginTop: 3 }}>{k.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
-      {/* Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #92400E 0%, #B45309 50%, #D97706 100%)', padding: bannerPadding }}>
-        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(253,230,138,.85)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
-          Department Overview
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: bannerTitleSize, fontWeight: 800, color: 'white', marginBottom: 8 }}>Food & Kitchen</div>
-        <div style={{ display: 'flex', gap: 28, flexWrap: 'wrap' }}>
-          {[
-            { label: 'Dining Facilities', value: `${d.summary.totalDiners}` },
-            { label: 'Total Seats',       value: `${d.summary.totalSeats.toLocaleString()}` },
-            { label: 'Mess Billing',      value: fmt(mess.totalBilled) },
-            { label: 'Ingredient Indents',value: `${d.summary.totalIngredientIndents}` },
-            { label: 'Hospital Wards',    value: `${d.patientDiet.totalWards}` },
-          ].map((k, i) => (
-            <div key={i}>
-              <div style={{ fontFamily: FONT, fontSize: 20, fontWeight: 800, color: 'white', wordBreak: 'break-word' }}>{k.value}</div>
-              <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(253,230,138,.75)' }}>{k.label}</div>
-            </div>
-          ))}
-        </div>
+      <div style={{ padding: isMobile ? '20px 16px' : '28px 32px 0' }}>
+        <PageBanner
+          crumb="DEPARTMENT OVERVIEW"
+          title="Food & Kitchen"
+          actions={bannerStats}
+        />
       </div>
 
       <div style={{ padding: contentPadding, maxWidth: 1200 }}>

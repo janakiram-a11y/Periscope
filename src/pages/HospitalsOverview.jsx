@@ -2,6 +2,7 @@ import React from 'react';
 import { Stethoscope, Plane, ShoppingBag, AlertTriangle, ExternalLink, Clock, Activity, Wifi, WifiOff } from 'lucide-react';
 import { financialOverview, travelDeskDetail, departmentCards, attentionItems } from '../data/dashboardData';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import PageBanner from '../components/PageBanner';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const TEAL = '#0F766E';
@@ -56,33 +57,41 @@ export default function HospitalsOverview({ onNavigate }) {
   const { isMobile, isTablet, isDesktop } = useBreakpoint();
 
   const contentPadding = isMobile ? '20px 16px' : '28px 32px';
-  const bannerPadding = isMobile ? '20px 16px 18px' : '28px 32px 24px';
-  const bannerTitleSize = isMobile ? 20 : 24;
 
   const hospitalGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(3, 1fr)';
   const twoColGridCols = isMobile ? '1fr' : '1fr 1fr';
 
+  const bannerStats = (
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+      {[
+        { label: 'Hospitals',        value: '3' },
+        { label: 'Combined Budget',  value: fmt(totalBudget) },
+        { label: 'Travel Pipeline',  value: fmt(pendingTravelValue) },
+        { label: 'Ward Diet Orders', value: '84' },
+      ].map((k, i) => (
+        <div key={i} style={{
+          background: 'rgba(255,255,255,0.12)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          borderRadius: 10,
+          padding: isMobile ? '8px 12px' : '10px 16px',
+          minWidth: 0,
+        }}>
+          <div style={{ fontFamily: FONT, fontSize: isMobile ? 16 : 20, fontWeight: 800, color: 'white', wordBreak: 'break-word', lineHeight: 1.1 }}>{k.value}</div>
+          <div style={{ fontFamily: FONT, fontSize: 10.5, color: 'rgba(255,255,255,.65)', marginTop: 3 }}>{k.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
-      {/* Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #0F766E 0%, #115E59 60%, #134E4A 100%)', padding: bannerPadding }}>
-        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(153,246,228,.8)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
-          Department Overview
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: bannerTitleSize, fontWeight: 800, color: 'white', marginBottom: 8 }}>Hospitals</div>
-        <div style={{ display: 'flex', gap: isMobile ? 16 : 28, flexWrap: 'wrap' }}>
-          {[
-            { label: 'Hospitals',         value: '3' },
-            { label: 'Combined Budget',   value: fmt(totalBudget) },
-            { label: 'Travel Pipeline',   value: fmt(pendingTravelValue) },
-            { label: 'Ward Diet Orders',  value: '84' },
-          ].map((k, i) => (
-            <div key={i} style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: FONT, fontSize: isMobile ? 16 : 20, fontWeight: 800, color: 'white', wordBreak: 'break-word' }}>{k.value}</div>
-              <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(153,246,228,.75)' }}>{k.label}</div>
-            </div>
-          ))}
-        </div>
+      <div style={{ padding: isMobile ? '20px 16px' : '28px 32px 0' }}>
+        <PageBanner
+          crumb="DEPARTMENT OVERVIEW"
+          title="Hospitals"
+          actions={bannerStats}
+          background="linear-gradient(135deg, #0F766E 0%, #115E59 60%, #134E4A 100%)"
+        />
       </div>
 
       <div style={{ padding: contentPadding, maxWidth: 1200 }}>

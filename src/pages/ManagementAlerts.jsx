@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AlertTriangle, AlertCircle, Info, ChevronRight, Filter } from 'lucide-react';
 import { attentionItems, tatSlaData } from '../data/dashboardData';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import PageBanner from '../components/PageBanner';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const NAVY = '#223F7F';
@@ -128,33 +129,37 @@ export default function ManagementAlerts({ onNavigate }) {
   };
   const slaBreached = tatSlaData.filter(r => r.status === 'breached');
 
-  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
   const contentPadding = isMobile ? '20px 16px' : '28px 32px';
-  const titleSize = isMobile ? 20 : 24;
-  const statFontSize = isMobile ? 20 : 24;
-  const statsGap = isMobile ? 16 : 28;
+
+  const bannerStats = (
+    <div style={{ display: 'flex', gap: isMobile ? 8 : 10, flexWrap: 'wrap', marginTop: 10 }}>
+      {[
+        { label: 'Critical',     value: counts.critical,    color: '#FCA5A5' },
+        { label: 'High',         value: counts.high,        color: '#FCD34D' },
+        { label: 'Medium',       value: counts.medium,      color: '#93C5FD' },
+        { label: 'SLA Breached', value: slaBreached.length, color: '#F9A8D4' },
+      ].map((k, i) => (
+        <div key={i} style={{
+          background: 'rgba(255,255,255,0.12)',
+          border: '1px solid rgba(255,255,255,0.18)',
+          borderRadius: 10,
+          padding: isMobile ? '8px 12px' : '10px 16px',
+        }}>
+          <div style={{ fontFamily: FONT, fontSize: isMobile ? 20 : 24, fontWeight: 800, color: k.color, lineHeight: 1.1 }}>{k.value}</div>
+          <div style={{ fontFamily: FONT, fontSize: 10.5, color: 'rgba(255,255,255,.65)', marginTop: 3 }}>{k.label}</div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
-      {/* Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #7F1D1D 0%, #991B1B 50%, #DC2626 100%)', padding: bannerPadding }}>
-        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(254,202,202,.85)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
-          Management Dashboard
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: titleSize, fontWeight: 800, color: 'white', marginBottom: 8 }}>Alerts Centre</div>
-        <div style={{ display: 'flex', gap: statsGap, flexWrap: 'wrap' }}>
-          {[
-            { label: 'Critical', value: counts.critical, color: '#FCA5A5' },
-            { label: 'High',     value: counts.high,     color: '#FCD34D' },
-            { label: 'Medium',   value: counts.medium,   color: '#93C5FD' },
-            { label: 'SLA Breached', value: slaBreached.length, color: '#F9A8D4' },
-          ].map((k, i) => (
-            <div key={i} style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: FONT, fontSize: statFontSize, fontWeight: 800, color: k.color, wordBreak: 'break-word' }}>{k.value}</div>
-              <div style={{ fontFamily: FONT, fontSize: 11, color: 'rgba(254,202,202,.75)' }}>{k.label}</div>
-            </div>
-          ))}
-        </div>
+      <div style={{ padding: isMobile ? '20px 16px' : '28px 32px 0' }}>
+        <PageBanner
+          crumb="MANAGEMENT DASHBOARD"
+          title="Alerts Centre"
+          actions={bannerStats}
+        />
       </div>
 
       <div style={{ padding: contentPadding, maxWidth: 1100 }}>

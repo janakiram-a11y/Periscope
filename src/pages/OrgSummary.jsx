@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertTriangle, TrendingUp, TrendingDown, CheckCircle, Building2, Stethoscope, Utensils, ChevronRight, Users, IndianRupee, AlertCircle } from 'lucide-react';
 import { financialOverview, executiveKPIs, attentionItems, foodKitchenData } from '../data/dashboardData';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import PageBanner from '../components/PageBanner';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 const NAVY = '#223F7F';
@@ -134,25 +135,18 @@ export default function OrgSummary({ onNavigate }) {
     { label: 'A1 Payable',   value: fmt(foodKitchenData.vendorPayables.outstanding) },
   ];
 
-  const bannerPadding = isMobile ? '20px 16px' : '28px 32px 24px';
-  const bannerTitleSize = isMobile ? 20 : 24;
   const contentPadding = isMobile ? '20px 16px' : '28px 32px';
   const kpiGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(5, 1fr)';
   const deptGridCols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : 'repeat(auto-fit, minmax(280px, 1fr))';
 
   return (
     <div style={{ fontFamily: FONT, minHeight: '100%', background: '#F8FAFC' }}>
-      {/* Banner */}
-      <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #1E3A7A 50%, #2D5AA8 100%)`, padding: bannerPadding }}>
-        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, color: 'rgba(147,197,253,.8)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 4 }}>
-          Laila Management · Periscope
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: bannerTitleSize, fontWeight: 800, color: 'white', marginBottom: 4, wordBreak: 'break-word' }}>
-          Organisation Summary
-        </div>
-        <div style={{ fontFamily: FONT, fontSize: 13, color: 'rgba(191,219,254,.75)', flexWrap: 'wrap' }}>
-          Asram Colleges · Academic Year 2026–27 · As of 26 Jun 2026
-        </div>
+      <div style={{ padding: isMobile ? '20px 16px' : '28px 32px 0' }}>
+        <PageBanner
+          crumb="LAILA MANAGEMENT · PERISCOPE"
+          title="Organisation Summary"
+          subtitle="Asram Colleges · Academic Year 2026–27 · As of 26 Jun 2026"
+        />
       </div>
 
       <div style={{ padding: contentPadding, maxWidth: 1200 }}>
