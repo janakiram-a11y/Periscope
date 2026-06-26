@@ -1,12 +1,17 @@
 import React from 'react';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const FONT = 'Montserrat, system-ui, sans-serif';
 
 export default function PageBanner({ crumb, title, subtitle, actions, stat }) {
+  const { isMobile } = useBreakpoint();
+
   return (
     <div style={{
       background: 'linear-gradient(135deg, #223F7F 0%, #1A5FA8 100%)',
-      borderRadius: 16, padding: '24px 28px', color: 'white',
+      borderRadius: 16,
+      padding: isMobile ? '24px 20px' : '28px 32px',
+      color: 'white',
       position: 'relative', overflow: 'hidden', flexShrink: 0,
     }}>
       {/* Decorative circles */}
@@ -22,8 +27,12 @@ export default function PageBanner({ crumb, title, subtitle, actions, stat }) {
       }} />
 
       <div style={{
-        display: 'flex', alignItems: 'flex-end',
-        justifyContent: 'space-between', position: 'relative',
+        display: 'flex',
+        alignItems: isMobile ? 'flex-start' : 'flex-end',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: isMobile ? 12 : 0,
+        position: 'relative',
       }}>
         <div>
           {crumb && (
@@ -34,7 +43,9 @@ export default function PageBanner({ crumb, title, subtitle, actions, stat }) {
             }}>{crumb}</div>
           )}
           <h1 style={{
-            fontFamily: FONT, fontSize: 24, fontWeight: 700,
+            fontFamily: FONT,
+            fontSize: isMobile ? 20 : 24,
+            fontWeight: 700,
             color: 'white', lineHeight: 1.2, marginBottom: subtitle ? 5 : 0,
           }}>{title}</h1>
           {subtitle && (
@@ -44,15 +55,15 @@ export default function PageBanner({ crumb, title, subtitle, actions, stat }) {
           )}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0, flexWrap: 'wrap' }}>
           {stat && (
-            <div style={{ textAlign: 'right', marginRight: 4 }}>
+            <div style={{ textAlign: isMobile ? 'left' : 'right', marginRight: 4 }}>
               <div style={{ fontFamily: FONT, fontSize: 40, fontWeight: 800, color: 'white', lineHeight: 1 }}>{stat.value}</div>
               <div style={{ fontFamily: FONT, fontSize: 10, color: 'rgba(255,255,255,.6)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>{stat.label}</div>
             </div>
           )}
           {actions && (
-            <div style={{ display: 'flex', gap: 8 }}>{actions}</div>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{actions}</div>
           )}
         </div>
       </div>

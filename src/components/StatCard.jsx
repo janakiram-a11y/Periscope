@@ -13,6 +13,7 @@ export default function StatCard({ label, value, sub, icon: Icon, color = '#3741
       display: 'flex',
       flexDirection: 'column',
       gap: 10,
+      minWidth: 0,
     }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <span style={{
@@ -36,6 +37,7 @@ export default function StatCard({ label, value, sub, icon: Icon, color = '#3741
         fontSize: 30, fontWeight: 800,
         color: color,
         letterSpacing: '-0.5px', lineHeight: 1,
+        wordBreak: 'break-word',
       }}>{value}</div>
       {sub && (
         <div style={{
